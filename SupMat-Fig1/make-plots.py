@@ -54,18 +54,26 @@ Mcs = np.array([5, 20, 50])
 finits = np.array([2e-3, 1e-2, 5e-2])
 n_stat = np.logspace(0, np.log10(100_000), 51)
 
-inds_x = [1, 2, 1, 2]
-inds_y = [0, 0, 2, 2]
+# inds_x = [1, 2, 1, 2]
+# inds_y = [0, 0, 2, 2]
+# inds_x = [0, 2, 0, 2]
+# inds_y = [0, 0, 1, 1]
+inds_x = [0, 1, 1, 2]
+inds_y = [0, 1, 2, 2]
+
 
 colors = ['C0', 'C1', 'C2', 'C3']
-lses = ['-', '--', '-', '-']
+lses = ['-', '-', '-', '-']
 fig, ax = plt.subplots(figsize=(4,3), dpi=150)
 for (ix, iy, c, ls) in zip(inds_x, inds_y, colors, lses):
-    ax.loglog(n_stat, gpudat[ix,iy], c=c, ls=ls, lw=1.2, label=f'{Mcs[ix]}, {finits[iy]:.0e}')#, label=fr'$\mathcal{{M}}_c={Mcs[ix]}, f_\mathrm{{low}}={finits[iy]}$')
-    ax.axhline(cpudat[ix,iy], c=c, ls=ls, lw=0.6)
+    ax.loglog(n_stat, gpudat[ix,iy], c=c, ls=ls, lw=1.2, label=f'{Mcs[ix]}, {finits[iy]*1000:.0f}')#, label=fr'$\mathcal{{M}}_c={Mcs[ix]}, f_\mathrm{{low}}={finits[iy]}$')
+    ax.axhline(cpudat[ix,iy], c=c, ls='--', lw=1.2)
     print(ix, iy, cpudat[ix,iy])
-ax.legend(frameon=False, title=r'$(\mathcal{M}_c, f_\mathrm{in})$')
+ax.legend(frameon=False, ncol=2, loc="lower left", title=r'$\mathcal{M}_c(M_\odot), f_\mathrm{in}(\mathrm{mHz})$')
 ax.set_ylabel('Cost per statistic evaluation (s)')
 ax.set_xlabel('Batch size of source parameters')
+# ax.set_ylim(1e-7, None)
+ax.set_ylim(4e-7, 4e-1)
+ax.set_xlim(1, 1e5)
 plt.savefig("timings-1d-scaling.pdf", bbox_inches='tight')
 plt.close()
